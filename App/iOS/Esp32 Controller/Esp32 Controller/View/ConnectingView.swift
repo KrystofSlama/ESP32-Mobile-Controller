@@ -18,18 +18,16 @@ struct ConnectingView: View {
     var body: some View {
         NavigationStack {
             HStack(spacing: 0) {
-                    // List of devices
+                // List of devices
                 VStack {
                     let filteredDevices = bleManager.discoveredDevices.filter { $0.name == bleManager.deviceName }
                     
-                    
-                    
                     if filteredDevices.isEmpty && bleManager.isScanning {
                         VStack {
-                                ProgressView("Searching...")
-                                    .padding()
-                            }
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            ProgressView("Searching...")
+                                .padding()
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                     } else if filteredDevices.isEmpty && !bleManager.isScanning {
                         VStack {
                             Image(systemName: "magnifyingglass")
@@ -113,59 +111,57 @@ struct ConnectingView: View {
                         }
                     }
                 }
-                    Spacer()
-                    
-                    // Middle
+                Spacer()
+                
+                // Middle
                 VStack {
                     
                 }.frame(maxWidth: .infinity)
                     .border(Color.green, width: 3)
+                
+                Spacer()
+                
+                // Right buttons
+                VStack {
+                    HStack {
+                        Spacer()
+                        
+                        NavigationLink {
+                            SettingsView(bleManager: bleManager)
+                        } label: {
+                            Image(systemName: "gear")
+                                .resizable()
+                                .frame(width: 45, height: 45)
+                                .bold()
+                                .foregroundColor(colorScheme == .dark ? .white : .black)
+                        }
+                    }.padding()
+                    
                     
                     
                     
                     Spacer()
                     
-                    // Right buttons
-                    VStack {
-                        HStack {
-                            Spacer()
-                            
-                            NavigationLink {
-                                SettingsView(bleManager: bleManager)
-                            } label: {
-                                Image(systemName: "gear")
-                                    .resizable()
-                                    .frame(width: 45, height: 45)
-                                    .bold()
-                                    .foregroundColor(colorScheme == .dark ? .white : .black)
-                            }
-                        }.padding(.trailing)
-                        
-                        
-                        
-                        
+                    HStack {
                         Spacer()
                         
-                        HStack {
-                            Spacer()
-                            
-                            NavigationLink {
-                                ControllerView(bleManager: bleManager)
-                            } label: {
-                                Text("Drive")
-                                    .foregroundStyle(.black)
-                                    .font(.largeTitle)
-                                    .bold()
-                                    .padding(.horizontal)
-                                    .padding(.vertical, 10)
-                            }.buttonStyle(.borderedProminent)
-                                .tint(.green)
-                                .disabled(!bleManager.isConnected)
-                        }.padding(.trailing)
-                        
-                    }.frame(maxWidth: .infinity)
+                        NavigationLink {
+                            ControllerView(bleManager: bleManager)
+                        } label: {
+                            Text("Drive")
+                                .foregroundStyle(.black)
+                                .font(.largeTitle)
+                                .bold()
+                                .padding(.horizontal)
+                                .padding(.vertical, 10)
+                        }.buttonStyle(.borderedProminent)
+                            .tint(.green)
+                            .disabled(!bleManager.isConnected)
+                    }.padding(.trailing)
+                    
+                }.frame(maxWidth: .infinity)
             }.padding()
-            .edgesIgnoringSafeArea(.all)
+                .edgesIgnoringSafeArea(.all)
         }
         .onAppear {
             connectionTimer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { _ in

@@ -25,18 +25,22 @@ struct ControllerView: View {
 
     var body: some View {
         VStack(spacing: 20) {
-            HStack {
+            HStack(alignment: .center) {
                 Button {
                     bleManager.checkConnection()
                 } label: {
                     Image(systemName: "arrow.clockwise")
+                        .font(.title3)
+                        .bold()
                 }
                 if bleManager.isConnected {
-                    Text("✅ Connected")
-                        .font(.title2)
+                    Image(systemName: "wifi")
+                        .font(.title)
+                        .bold()
                 } else {
-                    Text("❌ Disconnected")
-                        .font(.title2)
+                    Image(systemName: "wifi.slash")
+                        .font(.title)
+                        .bold()
                 }
                 
                 
@@ -60,12 +64,12 @@ struct ControllerView: View {
                         bleManager.sendRoombaBytes([132]) // FULL mode
                     }
                 }
-
+                
                 
                 Spacer()
                 
                 Button("📡 Dock") {
-                    //bleManager.sendRoombaBytes([143])
+                    bleManager.sendRoombaBytes([143])
                 }
             }
             
@@ -83,57 +87,71 @@ struct ControllerView: View {
                 Spacer()
                 
                 VStack {
+                    // Up button row
                     HStack {
                         Button {
                             vacuumOn.toggle()
                             motorsControl()
                         } label: {
-                            ZStack {
-                                Circle()
-                                    .frame(width: 80, height: 80)
-                                    .foregroundStyle(Color(.systemGray4))
-                                
-                                if vacuumOn {
-                                    Image(systemName: "tornado")
-                                        .resizable()
-                                        .frame(width: 50, height: 50)
-                                        .foregroundStyle(.black)
-                                        .background(.clear)
-                                } else {
-                                    Image(systemName: "tornado")
-                                        .resizable()
-                                        .frame(width: 50, height: 50)
-                                        .foregroundStyle(.black)
-                                        .background(.clear)
+                            VStack {
+                                ZStack {
+                                    Circle()
+                                        .frame(width: 80, height: 80)
+                                        .foregroundStyle(Color(.systemGray4))
+                                    
+                                    if vacuumOn {
+                                        Image(systemName: "tornado")
+                                            .resizable()
+                                            .bold()
+                                            .frame(width: 50, height: 50)
+                                            .foregroundStyle(.black)
+                                            .background(.clear)
+                                    } else {
+                                        Image(systemName: "tornado")
+                                            .resizable()
+                                            .frame(width: 50, height: 50)
+                                            .foregroundStyle(.black)
+                                            .background(.clear)
+                                    }
                                 }
+                                Text("Vacuum")
+                                    .foregroundStyle(.gray)
+                                    .font(.caption)
                             }
                         }
                         .padding()
                         .cornerRadius(10)
-                    }.padding(.bottom, -40)
+                    }.padding(.bottom, -30)
+                    // Bottom Button row
                     HStack {
                         Button {
                             sideBrushOn.toggle()
                             motorsControl()
                         } label: {
-                            ZStack {
-                                Circle()
-                                    .frame(width: 80, height: 80)
-                                    .foregroundStyle(Color(.systemGray4))
-                                
-                                if sideBrushOn {
-                                    Image(systemName: "fan.fill")
-                                        .resizable()
-                                        .frame(width: 50, height: 50)
-                                        .foregroundStyle(.black)
-                                        .background(.clear)
-                                } else {
-                                    Image(systemName: "fan")
-                                        .resizable()
-                                        .frame(width: 50, height: 50)
-                                        .foregroundStyle(.black)
-                                        .background(.clear)
+                            VStack {
+                                ZStack {
+                                    Circle()
+                                        .frame(width: 80, height: 80)
+                                        .foregroundStyle(Color(.systemGray4))
+                                    
+                                    if sideBrushOn {
+                                        Image(systemName: "fan.fill")
+                                            .resizable()
+                                            .frame(width: 50, height: 50)
+                                            .foregroundStyle(.black)
+                                            .background(.clear)
+                                    } else {
+                                        Image(systemName: "fan")
+                                            .resizable()
+                                            .frame(width: 50, height: 50)
+                                            .foregroundStyle(.black)
+                                            .background(.clear)
+                                    }
+                                    
                                 }
+                                Text("Side Brush")
+                                    .foregroundStyle(.gray)
+                                    .font(.caption)
                             }
                         }
                         .padding()
@@ -145,33 +163,37 @@ struct ControllerView: View {
                             mainBrushOn.toggle()
                             motorsControl()
                         } label: {
-                            ZStack {
-                                Circle()
-                                    .frame(width: 80, height: 80)
-                                    .foregroundStyle(Color(.systemGray4))
-                                
-                                if mainBrushOn {
-                                    Image(systemName: "paintbrush.fill")
-                                        .resizable()
-                                        .frame(width: 50, height: 50)
-                                        .foregroundStyle(.black)
-                                        .background(.clear)
-                                } else {
-                                    Image(systemName: "paintbrush")
-                                        .resizable()
-                                        .frame(width: 50, height: 50)
-                                        .foregroundStyle(.black)
-                                        .background(.clear)
+                            VStack {
+                                ZStack {
+                                    Circle()
+                                        .frame(width: 80, height: 80)
+                                        .foregroundStyle(Color(.systemGray4))
+                                    
+                                    if mainBrushOn {
+                                        Image(systemName: "paintbrush.fill")
+                                            .resizable()
+                                            .frame(width: 50, height: 50)
+                                            .foregroundStyle(.black)
+                                            .background(.clear)
+                                    } else {
+                                        Image(systemName: "paintbrush")
+                                            .resizable()
+                                            .frame(width: 50, height: 50)
+                                            .foregroundStyle(.black)
+                                            .background(.clear)
+                                    }
                                 }
+                                Text("Main Brush")
+                                    .foregroundStyle(.gray)
+                                    .font(.caption)
                             }
                         }
                         .padding()
                         .cornerRadius(10)
-                    }.frame(width: 200)
+                    }.frame(width: 250)
                 }
-            }
+            }.padding(.leading, 30)
         }
-        .padding()
     }
     
     func motorsControl() {
