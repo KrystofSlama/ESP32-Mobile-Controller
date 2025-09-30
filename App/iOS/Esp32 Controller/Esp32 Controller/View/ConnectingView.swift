@@ -168,16 +168,14 @@ struct ConnectingView: View {
             .edgesIgnoringSafeArea(.all)
         }
         .onAppear {
-
-                bleManager.startScan()
-
-                connectionTimer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { _ in
-                    bleManager.checkConnection()
-                }
+            connectionTimer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { _ in
+                bleManager.checkConnection()
             }
+        }
         .onDisappear {
             connectionTimer?.invalidate()
             connectionTimer = nil
+            bleManager.stopScan()
         }
     }
 }
