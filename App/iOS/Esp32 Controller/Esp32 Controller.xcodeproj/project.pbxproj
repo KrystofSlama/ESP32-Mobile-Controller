@@ -11,7 +11,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		86B37E302E2C45D000339154 /* Exceptions for "Esp32 Controller" folder in "Esp32 Controller" target */ = {
+		869D9A712E8C137800D40580 /* Exceptions for "Esp32 Controller" folder in "Esp32 Controller" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -24,7 +24,7 @@
 		86B37E1A2E2C411600339154 /* Esp32 Controller */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				86B37E302E2C45D000339154 /* Exceptions for "Esp32 Controller" folder in "Esp32 Controller" target */,
+				869D9A712E8C137800D40580 /* Exceptions for "Esp32 Controller" folder in "Esp32 Controller" target */,
 			);
 			path = "Esp32 Controller";
 			sourceTree = "<group>";
@@ -270,7 +270,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_EXPAND_BUILD_SETTINGS = YES;
-				INFOPLIST_FILE = "/Users/krystofslama/Documents/Projekty/Ostatni/ESP32/Esp32 Controller/Esp32 Controller/Info.plist";
+				INFOPLIST_FILE = "$(PROJECT_DIR)/Esp32 Controller/Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -305,7 +305,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_EXPAND_BUILD_SETTINGS = YES;
-				INFOPLIST_FILE = "/Users/krystofslama/Documents/Projekty/Ostatni/ESP32/Esp32 Controller/Esp32 Controller/Info.plist";
+				INFOPLIST_FILE = "$(PROJECT_DIR)/Esp32 Controller/Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
