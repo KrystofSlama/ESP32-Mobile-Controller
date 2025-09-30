@@ -2,11 +2,17 @@ import Foundation
 import CoreBluetooth
 
 class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeripheralDelegate {
+    private static let deviceFilterDefaultsKey = "bluetooth.deviceFilterName"
+
     @Published var isConnected = false
     @Published var discoveredDevices: [CBPeripheral] = []
     @Published var isScanning = false
-    
-    @Published var deviceName: String = "ESP32Roomba"
+
+    @Published var deviceName: String = UserDefaults.standard.string(forKey: BluetoothManager.deviceFilterDefaultsKey) ?? "ESP32Roomba" {
+        didSet {
+            UserDefaults.standard.set(deviceName, forKey: BluetoothManager.deviceFilterDefaultsKey)
+        }
+    }
     
     @Published var connectedPeripheral: CBPeripheral?
 
