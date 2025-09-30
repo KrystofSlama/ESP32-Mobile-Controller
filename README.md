@@ -40,14 +40,9 @@ interface.
    to match your Apple Developer account.
 5. Build and run the app on a physical device (recommended) or simulator.
 
-### ESP32 firmware for Roomba
+### ESP32 firmware
 
-1. Install the **Arduino IDE** or **PlatformIO** with ESP32 board support.
-2. Connect the ESP32 board that interfaces with your Roomba.
-3. Open `ESP32/Roomba/ESPScript.ino` and adjust pin mappings, and Roomba SCI parameters as needed.
-4. Flash the sketch to the ESP32.
-5. Connect the ESP32's UART to the Roomba's SCI port following the wiring
-   guidelines in `ESP32/Roomba/Roomba_SCI_manual.pdf`.
+Each ESP32 script should have README file for wiring scheme and needed set-up
 
 ## Usage
 
