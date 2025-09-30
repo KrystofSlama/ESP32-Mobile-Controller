@@ -1,7 +1,8 @@
 # ESP32 Mobile Controller
 
-Control legacy iRobot Roomba models with an ESP32 bridge and a native mobile
-client. This repository currently focuses on an iOS application that connects
+Control your ESP32 through BLE and control what ever you can.
+You can try ready to go (sometimes :D) iRobot Roomba script. 
+This repository currently focuses on an iOS application that connects
 to an ESP32 running the bundled firmware, but the codebase is evolving toward a
 more generic controller experience with a simplified, robot-agnostic
 interface.
