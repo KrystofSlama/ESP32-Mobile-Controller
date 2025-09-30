@@ -1,6 +1,6 @@
 # ESP32 Mobile Controller
 
-Control your ESP32 through BLE and control what ever you can.
+Control your ESP32 through BLE and control whatever you can.
 You can try ready to go (sometimes :D) iRobot Roomba script. 
 This repository currently focuses on an iOS application that connects
 to an ESP32 running the bundled firmware, but the codebase is evolving toward a
