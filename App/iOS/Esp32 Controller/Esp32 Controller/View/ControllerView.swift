@@ -31,8 +31,14 @@ struct ControllerView: View {
                 } label: {
                     Image(systemName: "arrow.clockwise")
                 }
-                Text("✅ Connected")
-                    .font(.title2)
+                if bleManager.isConnected {
+                    Text("✅ Connected")
+                        .font(.title2)
+                } else {
+                    Text("❌ Disconnected")
+                        .font(.title2)
+                }
+                
                 
                 Spacer()
                 
