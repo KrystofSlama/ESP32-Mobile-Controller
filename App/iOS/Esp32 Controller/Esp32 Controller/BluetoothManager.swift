@@ -1,5 +1,6 @@
 import Foundation
 import CoreBluetooth
+import SwiftUI
 
 class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     private static let deviceFilterDefaultsKey = "bluetooth.deviceFilterName"
@@ -11,6 +12,13 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
     @Published var deviceName: String = UserDefaults.standard.string(forKey: BluetoothManager.deviceFilterDefaultsKey) ?? "ESP32Roomba" {
         didSet {
             UserDefaults.standard.set(deviceName, forKey: BluetoothManager.deviceFilterDefaultsKey)
+        }
+    }
+
+    private static let profileDefaultsKey = "bluetooth.robotProfile"
+    @Published var selectedProfile: RobotProfile = RobotProfile(rawValue: UserDefaults.standard.string(forKey: BluetoothManager.profileDefaultsKey) ?? RobotProfile.roomba.rawValue) ?? .roomba {
+        didSet {
+            UserDefaults.standard.set(selectedProfile.rawValue, forKey: BluetoothManager.profileDefaultsKey)
         }
     }
     

@@ -9,12 +9,18 @@ import SwiftUI
 
 struct ConnectingView: View {
     @Environment(\.colorScheme) var colorScheme
-    
+
     @ObservedObject var bleManager: BluetoothManager
 
     @State private var connectionTimer: Timer?
 
-    
+    private var profileBinding: Binding<RobotProfile> {
+        Binding(
+            get: { bleManager.selectedProfile },
+            set: { bleManager.selectedProfile = $0 }
+        )
+    }
+
     var body: some View {
         NavigationStack {
             HStack(spacing: 0) {
@@ -129,7 +135,7 @@ struct ConnectingView: View {
                     VStack {
                         HStack {
                             Spacer()
-                            
+
                             NavigationLink {
                                 SettingsView(bleManager: bleManager)
                             } label: {
@@ -145,10 +151,26 @@ struct ConnectingView: View {
                         
                         
                         Spacer()
-                        
-                        HStack {
-                            Spacer()
-                            
+
+                        VStack(alignment: .trailing, spacing: 12) {
+                            Text("Controller Preset")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+
+                            Picker("Controller Preset", selection: profileBinding) {
+                                ForEach(RobotProfile.allCases) { profile in
+                                    Text(profile.displayName).tag(profile)
+                                }
+                            }
+                            .pickerStyle(.menu)
+                            .tint(.green)
+
+                            Text(bleManager.selectedProfile.description)
+                                .font(.footnote)
+                                .foregroundStyle(.secondary)
+                                .frame(maxWidth: 240)
+                                .multilineTextAlignment(.trailing)
+
                             NavigationLink {
                                 ControllerView(bleManager: bleManager)
                             } label: {
@@ -158,11 +180,13 @@ struct ConnectingView: View {
                                     .bold()
                                     .padding(.horizontal)
                                     .padding(.vertical, 10)
-                            }.buttonStyle(.borderedProminent)
-                                .tint(.green)
-                                .disabled(!bleManager.isConnected)
-                        }.padding(.trailing)
-                        
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .tint(.green)
+                            .disabled(!bleManager.isConnected)
+                        }
+                        .padding(.trailing)
+
                     }.frame(maxWidth: .infinity)
             }.padding()
             .edgesIgnoringSafeArea(.all)
