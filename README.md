@@ -44,32 +44,18 @@ interface.
 
 1. Install the **Arduino IDE** or **PlatformIO** with ESP32 board support.
 2. Connect the ESP32 board that interfaces with your Roomba.
-3. Open `ESP32/Roomba/ESPScript.ino` and adjust Wi-Fi credentials, pin
-   mappings, and Roomba SCI parameters as needed.
+3. Open `ESP32/Roomba/ESPScript.ino` and adjust pin mappings, and Roomba SCI parameters as needed.
 4. Flash the sketch to the ESP32.
 5. Connect the ESP32's UART to the Roomba's SCI port following the wiring
    guidelines in `ESP32/Roomba/Roomba_SCI_manual.pdf`.
 
-### Foomba firmware (upcoming)
-
-A Foomba-specific firmware package will live under `ESP32/Foomba/` and follow
-similar setup instructions. Check back soon for scripts, wiring diagrams, and
-configuration details tailored to Foomba hardware.
-
 ## Usage
 
-1. Power on the ESP32 and confirm it is connected to your network (or
-   advertising over BLE, depending on the firmware configuration).
+1. Power on the ESP32 and confirm it is connected to your roomba right.
 2. Launch the iOS app and select the detected ESP32 bridge.
-3. Use the on-screen controls to drive the Roomba, start cleaning cycles, or
+3. Use the on-screen controls to drive the Roomba, start cleaning, or
    command docking.
 4. Expect UI updates as the interface transitions to a more universal layout.
-
-## Testing
-
-- In Xcode, run unit/UI tests with **Product → Test** or `⌘U`.
-- Perform manual integration tests on a physical iOS device paired with an
-  ESP32 connected to a Roomba.
 
 ## Contributing
 
