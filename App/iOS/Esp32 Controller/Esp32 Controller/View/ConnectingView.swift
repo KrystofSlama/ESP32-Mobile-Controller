@@ -12,8 +12,6 @@ struct ConnectingView: View {
     
     @ObservedObject var bleManager: BluetoothManager
 
-    @State private var isScanning = false
-    
     @State private var connectionTimer: Timer?
 
     
@@ -26,13 +24,13 @@ struct ConnectingView: View {
                     
                     
                     
-                    if filteredDevices.isEmpty && isScanning {
+                    if filteredDevices.isEmpty && bleManager.isScanning {
                         VStack {
                                 ProgressView("Searching...")
                                     .padding()
                             }
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    } else if filteredDevices.isEmpty && !isScanning {
+                    } else if filteredDevices.isEmpty && !bleManager.isScanning {
                         VStack {
                             Image(systemName: "magnifyingglass")
                                 .resizable()
@@ -70,15 +68,13 @@ struct ConnectingView: View {
                     Spacer()
                     
                     Button {
-                        if isScanning {
+                        if bleManager.isScanning {
                             bleManager.stopScan()
-                            isScanning = false
                         } else {
                             bleManager.startScan()
-                            isScanning = true
                         }
                     } label: {
-                        if isScanning {
+                        if bleManager.isScanning {
                             ZStack {
                                 Rectangle()
                                     .frame(width: 150, height: 60)
@@ -172,17 +168,14 @@ struct ConnectingView: View {
             .edgesIgnoringSafeArea(.all)
         }
         .onAppear {
-                
-                bleManager.startScan()
-                isScanning = true
-            
-                connectionTimer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { _ in
-                    bleManager.checkConnection()
-                }
+            connectionTimer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { _ in
+                bleManager.checkConnection()
             }
+        }
         .onDisappear {
             connectionTimer?.invalidate()
             connectionTimer = nil
+            bleManager.stopScan()
         }
     }
 }

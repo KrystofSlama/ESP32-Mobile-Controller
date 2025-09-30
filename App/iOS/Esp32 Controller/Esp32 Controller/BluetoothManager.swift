@@ -4,6 +4,7 @@ import CoreBluetooth
 class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     @Published var isConnected = false
     @Published var discoveredDevices: [CBPeripheral] = []
+    @Published var isScanning = false
     
     @Published var deviceName: String = "ESP32Roomba"
     
@@ -23,10 +24,12 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
         discoveredDevices.removeAll()
         print("🔎 Starting scan...")
         centralManager.scanForPeripherals(withServices: nil, options: nil)
+        isScanning = true
     }
     func stopScan() {
         print("🔎 Stoping scan")
         centralManager.stopScan()
+        isScanning = false
     }
 
     func checkConnection() {
@@ -84,6 +87,7 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
         espPeripheral?.delegate = self
         centralManager.connect(peripheral, options: nil)
         connectedPeripheral = peripheral
+        isScanning = false
     }
 
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
