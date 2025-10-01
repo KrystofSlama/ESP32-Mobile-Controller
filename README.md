@@ -16,6 +16,13 @@ interface.
 - 🧰 **Extensible architecture** preparing for future robot types and a
   streamlined control interface.
 
+## What next
+
+-  **Test new roombas**
+-  **Recieving data from roomba** to show stats about a battery, etc.
+-  **New robots/apliances support**
+-  **Major redesing** to make controls more generic, not roomba specific
+  
 ## Repository structure
 
 | Path | Description |
