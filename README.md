@@ -22,6 +22,7 @@ interface.
 -  **Recieving data from roomba** to show stats about a battery, etc.
 -  **New robots/apliances support**
 -  **Major redesing** to make controls more generic, not roomba specific
+-  **Controller support**
   
 ## Repository structure
 
