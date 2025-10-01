@@ -1,10 +1,3 @@
-//
-//  Esp32_ControllerApp.swift
-//  Esp32 Controller
-//
-//  Created by Kryštof Sláma on 19.07.2025.
-//
-
 import SwiftUI
 
 @main

@@ -1,10 +1,3 @@
-//
-//  SettingsView.swift
-//  Esp32 Controller
-//
-//  Created by Kryštof Sláma on 27.07.2025.
-//
-
 import SwiftUI
 
 struct SettingsView: View {
