@@ -36,6 +36,36 @@ struct ConnectingView: View {
                         }
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                     } else {
+                        ScrollView(showsIndicators: false) {
+                            VStack(alignment: .center, spacing: 12) {
+                                Spacer()
+                                ForEach(filteredDevices) { device in
+                                    HStack {
+                                        Image(systemName: "robotic.vacuum")
+                                            .font(.largeTitle)
+                                            .padding(.leading, 12)
+                                        Spacer()
+                                        VStack(alignment: .trailing) {
+                                            Text(device.name)
+                                                .lineLimit(1)
+                                            if (bleManager.connectedDevice?.id == device.id) {
+                                                Button("Disconnect") {
+                                                    bleManager.disconnect()
+                                                }
+                                            } else {
+                                                Button("Connect") {
+                                                    bleManager.connect(to: device)
+                                                    print("connected: \(String(describing: bleManager.connectedDevice?.id)), fdevice: \(device.id)")
+                                                }
+                                            }
+                                        }.padding([.top, .bottom, .trailing], 12)
+                                    }
+                                    .background(Color(.systemGray6))
+                                    .cornerRadius(8)
+                                }
+                            }
+                        }
+                        /*
                         List(filteredDevices) { device in
 
 
@@ -64,9 +94,10 @@ struct ConnectingView: View {
                                 }
                             }
                         }
+                        */
                     }
 
-                    Spacer()
+                    
 
                     Button {
                         if bleManager.isScanning {

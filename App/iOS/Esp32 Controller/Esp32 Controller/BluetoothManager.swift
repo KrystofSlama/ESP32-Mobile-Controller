@@ -33,7 +33,7 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
     @Published var discoveredDevices: [BluetoothDevice] = []
     @Published var isScanning = false
 
-    @Published var deviceName: String = UserDefaults.standard.string(forKey: BluetoothManager.deviceFilterDefaultsKey) ?? "ESP32 Roomba" {
+    @Published var deviceName: String = UserDefaults.standard.string(forKey: BluetoothManager.deviceFilterDefaultsKey) ?? "ESP32Roomba" {
         didSet {
             UserDefaults.standard.set(deviceName, forKey: BluetoothManager.deviceFilterDefaultsKey)
         }
@@ -54,21 +54,28 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
     override init() {
         super.init()
         centralManager = CBCentralManager(delegate: self, queue: nil)
-        discoveredDevices = [simulatedDevice]
+        discoveredDevices = [simulatedDevice, simulatedDevice]
     }
 
+    // MARK: -Scanning
+    // Start scan + add connected device
     func startScan() {
         discoveredDevices = [simulatedDevice]
+        if let device = connectedDevice {
+            discoveredDevices.append(device)
+        }
         print("🔎 Starting scan...")
         centralManager.scanForPeripherals(withServices: nil, options: nil)
         isScanning = true
     }
+    // Stop scan
     func stopScan() {
         print("🔎 Stoping scan")
         centralManager.stopScan()
         isScanning = false
     }
-
+    // MARK: -Connection
+    // Check if is connected
     func checkConnection() {
         if let device = connectedDevice, device.isSimulated {
             print("🤖 Simulated device always reported as connected.")
