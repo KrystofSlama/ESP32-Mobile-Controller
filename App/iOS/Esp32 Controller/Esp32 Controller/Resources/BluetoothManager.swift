@@ -1,31 +1,6 @@
 import Foundation
 import CoreBluetooth
 
-struct BluetoothDevice: Identifiable, Equatable {
-    let id: UUID
-    let name: String
-    let peripheral: CBPeripheral?
-    let isSimulated: Bool
-
-    init(peripheral: CBPeripheral) {
-        self.id = peripheral.identifier
-        self.name = peripheral.name ?? "Unnamed"
-        self.peripheral = peripheral
-        self.isSimulated = false
-    }
-
-    init(id: UUID = UUID(), name: String, isSimulated: Bool) {
-        self.id = id
-        self.name = name
-        self.peripheral = nil
-        self.isSimulated = isSimulated
-    }
-
-    static func == (lhs: BluetoothDevice, rhs: BluetoothDevice) -> Bool {
-        lhs.id == rhs.id
-    }
-}
-
 class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     private static let deviceFilterDefaultsKey = "bluetooth.deviceFilterName"
 
@@ -99,7 +74,31 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
             isConnected = false
         }
     }
+    // Connect
+    func connect(to device: BluetoothDevice) {
+        if device.isSimulated {
+            stopScan()
+            connectedDevice = device
+            espPeripheral = nil
+            txCharacteristic = nil
+            isConnected = true
+            print("🤖 Connected to simulated device.")
+            return
+        }
 
+        guard let peripheral = device.peripheral else {
+            print("❌ Attempted to connect to a device without a peripheral reference.")
+            return
+        }
+
+        centralManager.stopScan()
+        espPeripheral = peripheral
+        espPeripheral?.delegate = self
+        centralManager.connect(peripheral, options: nil)
+        connectedDevice = device
+        isScanning = false
+    }
+    // Disconnect
     func disconnect() {
         if let device = connectedDevice, device.isSimulated {
             connectedDevice = nil
@@ -138,29 +137,7 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
         }
     }
 
-    func connect(to device: BluetoothDevice) {
-        if device.isSimulated {
-            stopScan()
-            connectedDevice = device
-            espPeripheral = nil
-            txCharacteristic = nil
-            isConnected = true
-            print("🤖 Connected to simulated device.")
-            return
-        }
-
-        guard let peripheral = device.peripheral else {
-            print("❌ Attempted to connect to a device without a peripheral reference.")
-            return
-        }
-
-        centralManager.stopScan()
-        espPeripheral = peripheral
-        espPeripheral?.delegate = self
-        centralManager.connect(peripheral, options: nil)
-        connectedDevice = device
-        isScanning = false
-    }
+    
 
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         print("✅ Connected to: \(peripheral.name ?? "Unknown")")
