@@ -2,19 +2,21 @@ import SwiftUI
 
 struct ConnectingView: View {
     @Environment(\.colorScheme) var colorScheme
-    
+
     @ObservedObject var bleManager: BluetoothManager
 
     @State private var connectionTimer: Timer?
 
-    
+
     var body: some View {
         NavigationStack {
             HStack(spacing: 0) {
                 // List of devices
                 VStack {
-                    let filteredDevices = bleManager.discoveredDevices.filter { $0.name == bleManager.deviceName }
-                    
+                    let filteredDevices = bleManager.discoveredDevices.filter { device in
+                        device.isSimulated || device.name == bleManager.deviceName
+                    }
+
                     if filteredDevices.isEmpty && bleManager.isScanning {
                         VStack {
                             ProgressView("Searching...")
@@ -27,37 +29,45 @@ struct ConnectingView: View {
                                 .resizable()
                                 .frame(width: 20, height: 20)
                                 .foregroundColor(.secondary)
-                            
+
                             Text("Search")
                                 .font(.title3)
                                 .foregroundStyle(.secondary)
                         }
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                     } else {
-                        List(filteredDevices, id: \.identifier) { device in
-                            
-                            
+                        List(filteredDevices) { device in
+
+
                             HStack {
-                                Text(device.name ?? "Unnamed")
-                                
+                                VStack(alignment: .leading) {
+                                    Text(device.name)
+
+                                    if device.isSimulated {
+                                        Text("Simulated")
+                                            .font(.caption)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                }
+
                                 Spacer()
-                                
-                                if (bleManager.connectedPeripheral?.identifier == device.identifier) {
+
+                                if (bleManager.connectedDevice?.id == device.id) {
                                     Button("Disconnect") {
                                         bleManager.disconnect()
                                     }
                                 } else {
                                     Button("Connect") {
                                         bleManager.connect(to: device)
-                                        print("connected: \(String(describing: bleManager.connectedPeripheral?.identifier)), fdevice: \(String(describing: device.identifier))")
+                                        print("connected: \(String(describing: bleManager.connectedDevice?.id)), fdevice: \(device.id)")
                                     }
                                 }
                             }
                         }
                     }
-                    
+
                     Spacer()
-                    
+
                     Button {
                         if bleManager.isScanning {
                             bleManager.stopScan()
@@ -105,20 +115,20 @@ struct ConnectingView: View {
                     }
                 }
                 Spacer()
-                
+
                 // Middle
                 VStack {
-                    
+
                 }.frame(maxWidth: .infinity)
                     .border(Color.green, width: 3)
-                
+
                 Spacer()
-                
+
                 // Right buttons
                 VStack {
                     HStack {
                         Spacer()
-                        
+
                         NavigationLink {
                             SettingsView(bleManager: bleManager)
                         } label: {
@@ -129,15 +139,15 @@ struct ConnectingView: View {
                                 .foregroundColor(colorScheme == .dark ? .white : .black)
                         }
                     }.padding()
-                    
-                    
-                    
-                    
+
+
+
+
                     Spacer()
-                    
+
                     HStack {
                         Spacer()
-                        
+
                         NavigationLink {
                             ControllerView(bleManager: bleManager)
                         } label: {
@@ -151,7 +161,7 @@ struct ConnectingView: View {
                             .tint(.green)
                             .disabled(!bleManager.isConnected)
                     }.padding(.trailing)
-                    
+
                 }.frame(maxWidth: .infinity)
             }.padding()
                 .edgesIgnoringSafeArea(.all)
