@@ -1,11 +1,36 @@
 import Foundation
 import CoreBluetooth
 
+struct BluetoothDevice: Identifiable, Equatable {
+    let id: UUID
+    let name: String
+    let peripheral: CBPeripheral?
+    let isSimulated: Bool
+
+    init(peripheral: CBPeripheral) {
+        self.id = peripheral.identifier
+        self.name = peripheral.name ?? "Unnamed"
+        self.peripheral = peripheral
+        self.isSimulated = false
+    }
+
+    init(id: UUID = UUID(), name: String, isSimulated: Bool) {
+        self.id = id
+        self.name = name
+        self.peripheral = nil
+        self.isSimulated = isSimulated
+    }
+
+    static func == (lhs: BluetoothDevice, rhs: BluetoothDevice) -> Bool {
+        lhs.id == rhs.id
+    }
+}
+
 class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     private static let deviceFilterDefaultsKey = "bluetooth.deviceFilterName"
 
     @Published var isConnected = false
-    @Published var discoveredDevices: [CBPeripheral] = []
+    @Published var discoveredDevices: [BluetoothDevice] = []
     @Published var isScanning = false
 
     @Published var deviceName: String = UserDefaults.standard.string(forKey: BluetoothManager.deviceFilterDefaultsKey) ?? "ESP32Roomba" {
@@ -13,32 +38,51 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
             UserDefaults.standard.set(deviceName, forKey: BluetoothManager.deviceFilterDefaultsKey)
         }
     }
-    
-    @Published var connectedPeripheral: CBPeripheral?
+
+    @Published var connectedDevice: BluetoothDevice?
 
     private var centralManager: CBCentralManager!
     private var espPeripheral: CBPeripheral?
     private var txCharacteristic: CBCharacteristic?
-    
+
+    private let simulatedDevice = BluetoothDevice(
+        id: UUID(uuidString: "00000000-0000-0000-0000-000000000001") ?? UUID(),
+        name: "ESP32 Roomba (Simulated)",
+        isSimulated: true
+    )
 
     override init() {
         super.init()
         centralManager = CBCentralManager(delegate: self, queue: nil)
+        discoveredDevices = [simulatedDevice, simulatedDevice]
     }
 
+    // MARK: -Scanning
+    // Start scan + add connected device
     func startScan() {
-        discoveredDevices.removeAll()
+        discoveredDevices = [simulatedDevice]
+        if let device = connectedDevice {
+            discoveredDevices.append(device)
+        }
         print("🔎 Starting scan...")
         centralManager.scanForPeripherals(withServices: nil, options: nil)
         isScanning = true
     }
+    // Stop scan
     func stopScan() {
         print("🔎 Stoping scan")
         centralManager.stopScan()
         isScanning = false
     }
-
+    // MARK: -Connection
+    // Check if is connected
     func checkConnection() {
+        if let device = connectedDevice, device.isSimulated {
+            print("🤖 Simulated device always reported as connected.")
+            isConnected = true
+            return
+        }
+
         guard let peripheral = espPeripheral else {
             print("❌ No device selected.")
             isConnected = false
@@ -57,13 +101,20 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
     }
 
     func disconnect() {
+        if let device = connectedDevice, device.isSimulated {
+            connectedDevice = nil
+            isConnected = false
+            print("🤖 Disconnected from simulated device.")
+            return
+        }
+
         guard let peripheral = espPeripheral else { return }
         centralManager.cancelPeripheralConnection(peripheral)
         isConnected = false
         txCharacteristic = nil
         espPeripheral = nil
         print("🔌 Disconnected.")
-        connectedPeripheral = nil
+        connectedDevice = nil
         isConnected = false
     }
 
@@ -79,25 +130,43 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
 
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral,
                         advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        let name = peripheral.name ?? "Unnamed"
-        print("🔍 Found peripheral: \(name), RSSI: \(RSSI), UUID: \(peripheral.identifier)")
+        let device = BluetoothDevice(peripheral: peripheral)
+        print("🔍 Found peripheral: \(device.name), RSSI: \(RSSI), UUID: \(device.id)")
 
-        if !discoveredDevices.contains(peripheral) {
-            discoveredDevices.append(peripheral)
+        if !discoveredDevices.contains(device) {
+            discoveredDevices.append(device)
         }
     }
 
-    func connect(to peripheral: CBPeripheral) {
+    func connect(to device: BluetoothDevice) {
+        if device.isSimulated {
+            stopScan()
+            connectedDevice = device
+            espPeripheral = nil
+            txCharacteristic = nil
+            isConnected = true
+            print("🤖 Connected to simulated device.")
+            return
+        }
+
+        guard let peripheral = device.peripheral else {
+            print("❌ Attempted to connect to a device without a peripheral reference.")
+            return
+        }
+
         centralManager.stopScan()
         espPeripheral = peripheral
         espPeripheral?.delegate = self
         centralManager.connect(peripheral, options: nil)
-        connectedPeripheral = peripheral
+        connectedDevice = device
         isScanning = false
     }
 
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         print("✅ Connected to: \(peripheral.name ?? "Unknown")")
+        if connectedDevice == nil {
+            connectedDevice = BluetoothDevice(peripheral: peripheral)
+        }
         isConnected = true
         peripheral.discoverServices(nil) // discover all services
     }
@@ -142,8 +211,13 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
             usleep(10000) // 10 ms pause between each send
         }
     }
-    
+
     func send(_ message: String) {
+        if connectedDevice?.isSimulated == true {
+            print("🤖 Simulated send: \(message)")
+            return
+        }
+
         if espPeripheral == nil {
             print("❌ No connected peripheral.")
         }
@@ -162,6 +236,6 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
 
         peripheral.writeValue(data, for: txChar, type: writeType)
     }
-    
+
 
 }

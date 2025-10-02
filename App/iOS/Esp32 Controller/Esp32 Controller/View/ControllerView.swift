@@ -19,13 +19,7 @@ struct ControllerView: View {
     var body: some View {
         VStack(spacing: 20) {
             HStack(alignment: .center) {
-                Button {
-                    bleManager.checkConnection()
-                } label: {
-                    Image(systemName: "arrow.clockwise")
-                        .font(.title3)
-                        .bold()
-                }
+                
                 if bleManager.isConnected {
                     Image(systemName: "wifi")
                         .font(.title)
@@ -34,6 +28,13 @@ struct ControllerView: View {
                     Image(systemName: "wifi.slash")
                         .font(.title)
                         .bold()
+                    Button {
+                        bleManager.checkConnection()
+                    } label: {
+                        Image(systemName: "arrow.clockwise")
+                            .font(.title3)
+                            .bold()
+                    }
                 }
                 
                 
