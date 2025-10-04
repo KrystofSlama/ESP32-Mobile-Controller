@@ -25,6 +25,7 @@ struct SettingsView: View {
                 Button("Reset to Default") {
                     deviceFilter = "ESP32Roomba"
                 }
+                Link("SetUp Guide", destination: URL(string: "https://github.com/KrystofSlama/ESP32-Mobile-Controller/blob/main/ESP32/Roomba/README.md")!)
             }
         }
         .navigationTitle("Settings")
