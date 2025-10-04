@@ -4,6 +4,7 @@ struct SettingsView: View {
     @ObservedObject var bleManager: BluetoothManager
     @State private var deviceFilter: String
 
+    @State var selectedPreset: String = "Default"
     init(bleManager: BluetoothManager) {
         self._bleManager = ObservedObject(wrappedValue: bleManager)
         self._deviceFilter = State(initialValue: bleManager.deviceName)
@@ -19,6 +20,16 @@ struct SettingsView: View {
                 Text("Only devices whose Bluetooth name matches this filter will appear on the connection screen.")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
+            }
+            Section("Controller Preset") {
+                Menu(selectedPreset) {
+                    Button("Default") {
+                        selectedPreset = "Default"
+                    }
+                    Button("Robot Vacuum") {
+                        selectedPreset = "Robot Vacuum"
+                    }
+                }
             }
 
             Section {
