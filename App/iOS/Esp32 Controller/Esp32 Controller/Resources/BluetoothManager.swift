@@ -182,19 +182,24 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
         }
     }
 
+    // MARK: -Commands
     func sendRoombaBytes(_ bytes: [UInt8]) {
         for byte in bytes {
             send("C:\(byte)")
             usleep(10000) // 10 ms pause between each send
         }
     }
-
+    // Sending command A-F, F1-4
+    func sendCommand(_ command: String) {
+        print("Send command. Recived: \(command)")
+        send("C:\(command)")
+    }
+    // Sends the actual message
     func send(_ message: String) {
         if connectedDevice?.isSimulated == true {
             print("🤖 Simulated send: \(message)")
             return
         }
-
         if espPeripheral == nil {
             print("❌ No connected peripheral.")
         }

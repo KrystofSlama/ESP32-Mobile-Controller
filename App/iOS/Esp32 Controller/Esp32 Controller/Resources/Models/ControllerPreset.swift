@@ -1,6 +1,17 @@
 import Foundation
 
 struct ControllerPreset: Codable, Identifiable, Equatable {
+    let id: String
+    let name: String
+    let isDefault: Bool
+
+    let joystick1: Bool
+    let trackpad1: Bool
+    let trackpad2: Bool
+
+    let buttons: [ActionButton]
+    
+    
     struct ActionButton: Codable, Identifiable, Equatable {
         let id: String
         let title: String
@@ -37,20 +48,10 @@ struct ControllerPreset: Codable, Identifiable, Equatable {
             self.isToggle = isToggle
         }
     }
-
-    let id: String
-    let name: String
-    let isDefault: Bool
-
-    let joystick1: Bool
-    let trackpad1: Bool
-    let trackpad2: Bool
-
-    let buttons: [ActionButton]
 }
 
 extension ControllerPreset {
-    static let roombaMotorToggleGroup = "roomba.motors"
+    static let roombaMotorToggleGroup = "vacuum.motors"
 
     static let builtInPresets: [ControllerPreset] = [
         ControllerPreset(
@@ -61,12 +62,12 @@ extension ControllerPreset {
             trackpad1: false,
             trackpad2: false,
             buttons: [
-                ActionButton(id: "btn.a", title: "A", buttonColorName: "blue", sendMessage: "BTN_A"),
-                ActionButton(id: "btn.b", title: "B", buttonColorName: "green", sendMessage: "BTN_B"),
-                ActionButton(id: "btn.c", title: "C", buttonColorName: "orange", sendMessage: "BTN_C"),
-                ActionButton(id: "btn.d", title: "D", buttonColorName: "purple", sendMessage: "BTN_D"),
-                ActionButton(id: "btn.e", title: "E", buttonColorName: "pink", sendMessage: "BTN_E"),
-                ActionButton(id: "btn.f", title: "F", buttonColorName: "gray", sendMessage: "BTN_F")
+                ActionButton(id: "btn.a", title: "A", buttonColorName: "blue", sendMessage: "A"),
+                ActionButton(id: "btn.b", title: "B", buttonColorName: "green", sendMessage: "B"),
+                ActionButton(id: "btn.c", title: "C", buttonColorName: "orange", sendMessage: "C"),
+                ActionButton(id: "btn.d", title: "D", buttonColorName: "purple", sendMessage: "D"),
+                ActionButton(id: "btn.e", title: "E", buttonColorName: "pink", sendMessage: "E"),
+                ActionButton(id: "btn.f", title: "F", buttonColorName: "gray", sendMessage: "F")
             ]
         ),
         ControllerPreset(
@@ -77,54 +78,12 @@ extension ControllerPreset {
             trackpad1: false,
             trackpad2: false,
             buttons: [
-                ActionButton(
-                    id: "rv.dock",
-                    title: "Dock",
-                    iconSystemName: "house",
-                    buttonColorName: "teal",
-                    roombaBytes: [143]
-                ),
-                ActionButton(
-                    id: "rv.spot",
-                    title: "Spot",
-                    iconSystemName: "sparkles",
-                    buttonColorName: "yellow",
-                    roombaBytes: [134]
-                ),
-                ActionButton(
-                    id: "rv.clean",
-                    title: "Clean",
-                    iconSystemName: "play.fill",
-                    buttonColorName: "green",
-                    roombaBytes: [135]
-                ),
-                ActionButton(
-                    id: "rv.vacuum",
-                    title: "Vacuum",
-                    iconSystemName: "tornado",
-                    buttonColorName: "gray",
-                    roombaMotorBitMask: 0b010,
-                    toggleGroup: ControllerPreset.roombaMotorToggleGroup,
-                    isToggle: true
-                ),
-                ActionButton(
-                    id: "rv.side-brush",
-                    title: "Side",
-                    iconSystemName: "fan",
-                    buttonColorName: "gray",
-                    roombaMotorBitMask: 0b001,
-                    toggleGroup: ControllerPreset.roombaMotorToggleGroup,
-                    isToggle: true
-                ),
-                ActionButton(
-                    id: "rv.main-brush",
-                    title: "Main",
-                    iconSystemName: "paintbrush",
-                    buttonColorName: "gray",
-                    roombaMotorBitMask: 0b100,
-                    toggleGroup: ControllerPreset.roombaMotorToggleGroup,
-                    isToggle: true
-                )
+                ActionButton(id: "rv.dock", title: "Dock", iconSystemName: "house", buttonColorName: "teal", sendMessage: "A"),
+                ActionButton(id: "rv.spot", title: "Spot", iconSystemName: "sparkles", buttonColorName: "yellow", sendMessage: "B"),
+                ActionButton(id: "rv.clean", title: "Clean", iconSystemName: "play.fill", buttonColorName: "green", sendMessage: "C"),
+                ActionButton(id: "rv.vacuum", title: "Vacuum", iconSystemName: "tornado", buttonColorName: "gray", sendMessage: "D"),
+                ActionButton(id: "rv.side-brush", title: "Side", iconSystemName: "fan", buttonColorName: "gray", sendMessage: "E"),
+                ActionButton(id: "rv.main-brush", title: "Main", iconSystemName: "paintbrush", buttonColorName: "gray", sendMessage: "F")
             ]
         )
     ]
