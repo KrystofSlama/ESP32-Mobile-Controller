@@ -69,7 +69,6 @@ questions about the evolving interface.
 
 - Simplify the mobile UI for a device-agnostic control flow.
 - Expand the ESP32 firmware to cover additional robot models (e.g., Foomba).
-- Add continuous integration for automated build and test pipelines.
 
 ## License
 
