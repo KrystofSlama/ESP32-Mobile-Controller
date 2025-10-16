@@ -5,6 +5,7 @@ struct SettingsView: View {
     @State private var deviceFilter: String
 
     @AppStorage("controllerPreset.id") private var selectedPresetID: String = ControllerPreset.defaultPreset.id
+    
     init(bleManager: BluetoothManager) {
         self._bleManager = ObservedObject(wrappedValue: bleManager)
         self._deviceFilter = State(initialValue: bleManager.deviceName)
@@ -21,6 +22,7 @@ struct SettingsView: View {
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
+            /*
             Section("Controller Preset") {
                 Menu(selectedPreset.name) {
                     ForEach(ControllerPreset.builtInPresets) { preset in
@@ -32,7 +34,7 @@ struct SettingsView: View {
                             } else {
                                 Text(preset.name)
                             }
-                        }
+                        }.disabled(true)
                     }
                 }
                 VStack(alignment: .leading, spacing: 6) {
@@ -46,7 +48,8 @@ struct SettingsView: View {
                     }
                 }
             }
-
+            */
+            
             Section {
                 Button("Reset to Default") {
                     deviceFilter = "ESP32Roomba"

@@ -192,26 +192,25 @@ struct ConnectingView: View {
                             .tint(.green)
                             .disabled(!bleManager.isConnected)
                     }.padding(.trailing)
-
+                    
                     HStack {
                         Spacer()
 
                         NavigationLink {
-                            ControllerPresetView(bleManager: bleManager)
+                            Controlllll(bleManager: bleManager)
                         } label: {
-                            Text("Drive (Preset)")
+                            Text("Drivee")
                                 .foregroundStyle(.black)
-                                .font(.title3)
+                                .font(.largeTitle)
                                 .bold()
                                 .padding(.horizontal)
                                 .padding(.vertical, 10)
-                        }
-                        .buttonStyle(.borderedProminent)
-                        .tint(.blue)
-                        .disabled(!bleManager.isConnected)
-                    }
-                    .padding(.trailing)
-
+                        }.buttonStyle(.borderedProminent)
+                            .tint(.green)
+                            .disabled(!bleManager.isConnected)
+                    }.padding(.trailing)
+                    
+                    
                 }.frame(maxWidth: .infinity)
             }.padding()
                 .edgesIgnoringSafeArea(.all)
