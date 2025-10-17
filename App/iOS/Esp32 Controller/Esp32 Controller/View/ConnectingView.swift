@@ -208,6 +208,7 @@ struct ConnectingView: View {
                         }.buttonStyle(.borderedProminent)
                             .tint(.green)
                             .disabled(!bleManager.isConnected)
+                            
                     }.padding(.trailing)
                     
                     

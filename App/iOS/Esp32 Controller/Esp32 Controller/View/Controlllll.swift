@@ -130,6 +130,9 @@ struct Controlllll: View {
         .onChange(of: selectedPresetID) { _, _ in
             toggledButtons.removeAll()
         }
+        .onAppear {
+            bleManager.sendCommand("Start")
+        }
     }
 }
 
