@@ -10,41 +10,6 @@
 #define ROOMBA_RX 16
 #define DETECT_PIN 15  // optional pin to reset/wake Roomba
 
-// Setup of BLE
-void setup() {
-  Serial.begin(115200);
-  Serial1.begin(115200, SERIAL_8N1, ROOMBA_RX, ROOMBA_TX);
-
-  // Optional: wake Roomba using detect pin
-  pinMode(DETECT_PIN, OUTPUT);
-  digitalWrite(DETECT_PIN, LOW); delay(100);
-  digitalWrite(DETECT_PIN, HIGH); delay(1000);
-
-  // Roomba start + safe mode
-  Serial1.write(128); delay(20);  // START
-  Serial1.write(131); delay(20);  // SAFE
-
-  // BLE setup
-  BLEDevice::init("ESP32Roomba");
-  BLEServer *pServer = BLEDevice::createServer();
-  BLEService *pService = pServer->createService(SERVICE_UUID);
-
-  BLECharacteristic *pCharacteristic = pService->createCharacteristic(
-    CHARACTERISTIC_UUID,
-    BLECharacteristic::PROPERTY_WRITE
-  );
-
-  pCharacteristic->setCallbacks(new MyCallbacks());
-
-  pService->start();
-
-  BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
-  pAdvertising->addServiceUUID(SERVICE_UUID);
-  pAdvertising->start();
-
-  Serial.println("🚀 BLE Ready — connect and send joystick data");
-}
-
 void sendDriveCommand(int velocity, int radius) {
   Serial.print("🚗 Sending Roomba drive → velocity: ");
   Serial.print(velocity);
@@ -99,6 +64,46 @@ class MyCallbacks : public BLECharacteristicCallbacks {
     }
   }
 };
+
+
+void setup() {
+  Serial.begin(115200);
+  Serial1.begin(115200, SERIAL_8N1, ROOMBA_RX, ROOMBA_TX);
+
+  delay(1000);
+  Serial.println("💡 Sending Start + Control (Safe)...");
+  Serial1.write(128); delay(20);  // START -> Passive
+  Serial1.write(130); delay(20);  // CONTROL -> Safe 
+
+  Serial1.write(140);
+  Serial1.write(0);
+  Serial1.write(8);           // 8 notes
+  uint8_t notes[] = {76,16, 76,16, 0,16, 76,16, 0,16, 72,16, 76,16, 79,16};
+  for (int i=0;i<sizeof(notes);i++) Serial1.write(notes[i]);
+  delay(20);
+  Serial1.write(141); 
+  Serial1.write(0);
+
+  // BLE setup
+  BLEDevice::init("ESP32Roomba");
+  BLEServer *pServer = BLEDevice::createServer();
+  BLEService *pService = pServer->createService(SERVICE_UUID);
+
+  BLECharacteristic *pCharacteristic = pService->createCharacteristic(
+    CHARACTERISTIC_UUID,
+    BLECharacteristic::PROPERTY_WRITE
+  );
+
+  pCharacteristic->setCallbacks(new MyCallbacks());
+
+  pService->start();
+
+  BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
+  pAdvertising->addServiceUUID(SERVICE_UUID);
+  pAdvertising->start();
+
+  Serial.println("🚀 BLE Ready — connect and send joystick data");
+}
 
 void loop() {
   // no loop logic needed
