@@ -192,26 +192,6 @@ struct ConnectingView: View {
                             .tint(.green)
                             .disabled(!bleManager.isConnected)
                     }.padding(.trailing)
-                    
-                    HStack {
-                        Spacer()
-
-                        NavigationLink {
-                            Controlllll(bleManager: bleManager)
-                        } label: {
-                            Text("Drivee")
-                                .foregroundStyle(.black)
-                                .font(.largeTitle)
-                                .bold()
-                                .padding(.horizontal)
-                                .padding(.vertical, 10)
-                        }.buttonStyle(.borderedProminent)
-                            .tint(.green)
-                            .disabled(!bleManager.isConnected)
-                            
-                    }.padding(.trailing)
-                    
-                    
                 }.frame(maxWidth: .infinity)
             }.padding()
                 .edgesIgnoringSafeArea(.all)
