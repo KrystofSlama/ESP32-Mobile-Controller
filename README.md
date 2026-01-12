@@ -38,16 +38,11 @@ interface.
 ### iOS application
 
 1. Install the latest versions of **Xcode** and the **iOS SDK** on macOS.
-2. Clone this repository:
-   ```bash
-   git clone https://github.com/<your-org>/ESP32-Mobile-Controller.git
-   cd ESP32-Mobile-Controller
-   ```
+2. Clone this repository
 3. Open the project file located at `App/iOS/Esp32 Controller/Esp32 Controller.xcodeproj` in
    Xcode.
-4. Update the bundle identifier and signing team under *Signing & Capabilities*
-   to match your Apple Developer account.
-5. Build and run the app on a physical device (recommended) or simulator.
+4.  Build and run the app on a physical device.
+5.  Wire ESP32 and enjoy
 
 ### ESP32 firmware
 
